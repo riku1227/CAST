@@ -169,6 +169,74 @@ namespace CAST
                 GameMain.Instance.CMSystem.ScreenShotSuperSize = CMSystem.SSSuperSizeType.X4;
                 shotScreenShot();
             }
+
+            if (GUI.Button(new Rect(10, screenBaseHeight * 40 + heightPadding, buttonWidth, buttonHeight), "モザ消しモデル化", buttonStyle))
+            {
+                List<string> fileNames = new List<string>();
+                foreach (MPN value in Enum.GetValues(typeof(MPN)))
+                {
+                    MaidProp maidProp = SceneEdit.Instance.EditMaid.GetProp(value);
+                    fileNames.Add(maidProp.strFileName);
+                    if (value != MPN.body)
+                    {
+                        SceneEdit.Instance.EditMaid.DelProp(value);
+                    }
+                }
+
+                SceneEdit.Instance.EditMaid.SetProp(MPN.body, "nomoza_body001_i_.menu", 0, false, false);
+                int nowMPN = 0;
+                foreach (MPN value in Enum.GetValues(typeof(MPN)))
+                {
+                    if (value != MPN.body)
+                    {
+                        if (value == MPN.head)
+                        {
+                            if (fileNames[nowMPN] != "face003_i_.menu")
+                            {
+                                SceneEdit.Instance.EditMaid.SetProp(value, "face003_i_.menu", 0);
+                                SceneEdit.Instance.EditMaid.SetProp(value, fileNames[nowMPN], 0);
+                            }
+                            else
+                            {
+                                SceneEdit.Instance.EditMaid.SetProp(value, "face004_i_.menu", 0);
+                                SceneEdit.Instance.EditMaid.SetProp(value, fileNames[nowMPN], 0);
+                            }
+                        }
+                        else if (value == MPN.hairf)
+                        {
+                            if (fileNames[nowMPN] != "hair_f039_i_.menu")
+                            {
+                                SceneEdit.Instance.EditMaid.SetProp(value, "hair_f039_i_.menu", 0);
+                                SceneEdit.Instance.EditMaid.SetProp(value, fileNames[nowMPN], 0);
+                            }
+                            else
+                            {
+                                SceneEdit.Instance.EditMaid.SetProp(value, "hair_f117_i_.menu", 0);
+                                SceneEdit.Instance.EditMaid.SetProp(value, fileNames[nowMPN], 0);
+                            }
+                        }
+                        else if (value == MPN.hairr)
+                        {
+                            if (fileNames[nowMPN] != "hair_twinr3_i_.menu")
+                            {
+                                SceneEdit.Instance.EditMaid.SetProp(value, "hair_twinr3_i_.menu", 0);
+                                SceneEdit.Instance.EditMaid.SetProp(value, fileNames[nowMPN], 0);
+                            }
+                            else
+                            {
+                                SceneEdit.Instance.EditMaid.SetProp(value, "hair_twinr_i_.menu", 0);
+                                SceneEdit.Instance.EditMaid.SetProp(value, fileNames[nowMPN], 0);
+                            }
+                        }
+                        else
+                        {
+                            SceneEdit.Instance.EditMaid.SetProp(value, fileNames[nowMPN], 0);
+                        }
+                    }
+                    nowMPN++;
+                }
+                SceneEdit.Instance.EditMaid.AllProcProp();
+            }
         }
 
         void MaidSelectUI()
