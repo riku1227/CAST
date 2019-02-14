@@ -11,9 +11,9 @@ namespace CAST.UI
 {
     class LogUI : MonoBehaviour
     {
-        private string logText = "";
-        private string castLogText = "";
-        private string oldLogText = "";
+        private static string logText = "";
+        private static string castLogText = "";
+        private static string oldLogText = "";
         private bool first = false;
         //private static int logCount = 5;
 
@@ -85,6 +85,13 @@ namespace CAST.UI
                     }
                 }
             }
+        }
+
+        public static void ClearLog()
+        {
+            logText = "";
+            castLogText = "";
+            oldLogText = "";
         }
     }
 }

@@ -206,6 +206,12 @@ namespace CAST.UI
                 }
 
             }
+
+            //ClearLog
+            if (GUI.Button(new Rect(baseRect + 10 + 225, baseRect + (buttonHeight * 1) + (10 * 1), 225, 75), "Logをクリア"))
+            {
+                LogUI.ClearLog();
+            }
         }
 
         Texture2D GetTexture2D(FileSystemAB fileSystemAB ,string fileName)
