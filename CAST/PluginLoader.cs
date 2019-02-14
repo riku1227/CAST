@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 
 using SCENE_EDIT;
 using System.IO;
+using System.Reflection;
 
 namespace CAST
 {
@@ -171,6 +172,17 @@ namespace CAST
             }
             App.Config.showLightSetting = false;
             UI.ConfigUI.show = false;
+        }
+
+        public static void OnOpenColorPalette(MaidParts.PARTS_COLOR type)
+        {
+            if(!AdvancedColorEdit.init)
+            {
+                AdvancedColorEdit.Init();
+            }
+
+            AdvancedColorEdit.nowType = type;
+            App.Config.showAdvancedColorPalette = true;
         }
     }
 }
