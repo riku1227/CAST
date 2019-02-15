@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 using SCENE_EDIT;
 
@@ -211,6 +212,21 @@ namespace CAST.UI
             if (GUI.Button(new Rect(baseRect + 10 + 225, baseRect + (buttonHeight * 1) + (10 * 1), 225, 75), "Logをクリア"))
             {
                 LogUI.ClearLog();
+            }
+
+            //HideAllUI
+            if (GUI.Button(new Rect(baseRect + 10 + 225, baseRect + (buttonHeight * 2) + (10 * 2), 225, 75), "UIを完全に非表示にする"))
+            {
+                SceneEdit.Instance.MainMenuUI.CloseFast();
+                SceneEdit.Instance.OptionMenuUI.CloseFast();
+                GameMain.Instance.SNSShare.m_ShareButton.gameObject.SetActive(false);
+                show = false;
+                App.Config.showLightSetting = false;
+                if(!HIdeAllGUIButton.init)
+                {
+                    HIdeAllGUIButton.Init();
+                }
+                App.Config.showHideAllGUIButton = true;
             }
         }
 

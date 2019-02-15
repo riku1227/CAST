@@ -30,6 +30,7 @@ namespace CAST
             public static bool showLightSetting = false;
             public static int showExPoseSelect = 0;
             public static bool showAdvancedColorPalette = false;
+            public static bool showHideAllGUIButton = false;
         }
     }
 }
