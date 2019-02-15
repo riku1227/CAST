@@ -95,7 +95,7 @@ namespace CAST
         void MenuUI()
         {
             var buttonStyle = GUI.skin.GetStyle("button");
-            buttonStyle.fontSize = 34;
+            buttonStyle.fontSize = 26;
             var baseRect = 22;
             float buttonWidth = screenBaseWidth * 30;
             float buttonHeight = screenBaseWidth * 10;
