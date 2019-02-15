@@ -13,6 +13,7 @@ namespace CAST
         public static string parts_mlist_path = "parts_data";
         public static string bg_csv_path = "bg_data";
         public static string position_preset_path = "position_preset";
+        public static string wear_preset_path = "wear_preset";
         public static FileSystemAB fileSystemAB = null;
 
         public static int min = 0;

@@ -18,12 +18,15 @@ namespace CAST
         bool showSpawnUI = false;
         bool showMaidDeleteWindow = false;
         bool showSavePresetWindow = false;
+        bool showSaveWearPresetWindow = false;
         bool showLoadPresetWindow = false;
+        bool showLoadWearPresetWindow = false;
         bool isLandscape = false;
         bool isShowUI = true;
 
         int spawnPage = 0;
         int presetPage = 0;
+        int WpresetPage = 0;
 
         Maid[] maidList = new Maid[18];
         int maidCount = 0;
@@ -35,7 +38,9 @@ namespace CAST
         List<CharacterMgr.MaidFileData> maidFileList = GameMain.Instance.CharacterMgr.MaidFileListLoad();
 
         string savePresetFileName = "FileName";
+        string saveWearPresetFileName = "WearPresetFileName";
         string[] presetFiles;
+        string[] presetFilesW;
 
         public static GameObject Init()
         {
@@ -79,6 +84,11 @@ namespace CAST
                 {
                     LoadPositionPresetUI();
                 }
+
+                if (showLoadWearPresetWindow)
+                {
+                    LoadWearPresetUI();
+                }
             }
         }
 
@@ -111,14 +121,14 @@ namespace CAST
                 PositionChanger.setShow(!App.Config.showPositionChanger);
             }
 
-            if (GUI.Button(new Rect(10, screenBaseHeight * 20 + heightPadding, buttonWidth, buttonHeight), "プリセットをロード", buttonStyle))
+            if (GUI.Button(new Rect(10, screenBaseHeight * 20 + heightPadding, buttonWidth, buttonHeight), "位置プリセットをロード", buttonStyle))
             {
                 string presetDirectory = AFileSystemBase.base_path + App.base_path + App.position_preset_path;
                 var allFile = Directory.GetFiles(presetDirectory);
                 List<string> vs = new List<string>();
-                foreach(var item in allFile)
+                foreach (var item in allFile)
                 {
-                    if(Path.GetExtension(item).IndexOf("json") != -1)
+                    if (Path.GetExtension(item).IndexOf("json") != -1)
                     {
                         vs.Add(item);
                     }
@@ -127,17 +137,34 @@ namespace CAST
                 showLoadPresetWindow = !showLoadPresetWindow;
             }
 
+            if (GUI.Button(new Rect(10, screenBaseHeight * 25 + heightPadding, buttonWidth, buttonHeight), "衣服プリセットをロード", buttonStyle))
+            {
+                string presetDirectory = AFileSystemBase.base_path + App.base_path + App.wear_preset_path;
+                var allFile = Directory.GetFiles(presetDirectory);
+                List<string> vsw = new List<string>();
+                foreach (var item in allFile)
+                {
+                    if (Path.GetExtension(item).IndexOf("json") != -1)
+                    {
+                        vsw.Add(item);
+                    }
+                }
+                presetFilesW = vsw.ToArray();
+                showLoadWearPresetWindow = !showLoadWearPresetWindow;
+            }
+
             string maidStr = "";
 
-            if(SceneEdit.Instance.EditMaid.boMabataki)
+            if (SceneEdit.Instance.EditMaid.boMabataki)
             {
                 maidStr = "瞬きを無効化する";
-            } else
+            }
+            else
             {
                 maidStr = "瞬きを有効化する";
             }
 
-            if (GUI.Button(new Rect(10, screenBaseHeight * 25 + heightPadding, buttonWidth, buttonHeight), maidStr, buttonStyle))
+            if (GUI.Button(new Rect(10, screenBaseHeight * 30 + heightPadding, buttonWidth, buttonHeight), maidStr, buttonStyle))
             {
                 SceneEdit.Instance.EditMaid.boMabataki = !SceneEdit.Instance.EditMaid.boMabataki;
             }
@@ -151,7 +178,7 @@ namespace CAST
             {
                 uiShowStr = "UIを表示する";
             }
-            if (GUI.Button(new Rect(10, screenBaseHeight * 30 + heightPadding, buttonWidth, buttonHeight), uiShowStr, buttonStyle))
+            if (GUI.Button(new Rect(10, screenBaseHeight * 35 + heightPadding, buttonWidth, buttonHeight), uiShowStr, buttonStyle))
             {
                 if(isShowUI)
                 {
@@ -162,12 +189,6 @@ namespace CAST
                     SceneEdit.Instance.MainMenuUI.OpenFast();
                     isShowUI = true;
                 }
-            }
-            
-            if (GUI.Button(new Rect(10, screenBaseHeight * 35 + heightPadding, buttonWidth, buttonHeight), "SSを取る", buttonStyle))
-            {
-                GameMain.Instance.CMSystem.ScreenShotSuperSize = CMSystem.SSSuperSizeType.X4;
-                shotScreenShot();
             }
 
             if (GUI.Button(new Rect(10, screenBaseHeight * 40 + heightPadding, buttonWidth, buttonHeight), "モザ消しモデル化", buttonStyle))
@@ -237,6 +258,13 @@ namespace CAST
                 }
                 SceneEdit.Instance.EditMaid.AllProcProp();
             }
+
+            if (GUI.Button(new Rect(10, screenBaseHeight * 45 + heightPadding, buttonWidth, buttonHeight), "SSを取る", buttonStyle))
+            {
+                GameMain.Instance.CMSystem.ScreenShotSuperSize = CMSystem.SSSuperSizeType.X4;
+                shotScreenShot();
+            }
+
         }
 
         void MaidSelectUI()
@@ -249,7 +277,7 @@ namespace CAST
             {
                 heightPadding = screenBaseHeight * 10;
             }
-            GUI.Window(12345, new Rect(Screen.width - (screenBaseWidth * 35) - 10, heightPadding, screenBaseWidth * 35, screenBaseWidth * 50), OnMaidSelectWindow, "エディットメイド切り替え");
+            GUI.Window(12345, new Rect(Screen.width - (screenBaseWidth * 35) - 10, heightPadding, screenBaseWidth * 35, screenBaseWidth * 60), OnMaidSelectWindow, "エディットメイド切り替え");
 
             if (showMaidDeleteWindow)
             {
@@ -271,6 +299,18 @@ namespace CAST
                 else
                 {
                     GUI.Window(6549865, new Rect(screenBaseWidth * 30, screenBaseHeight * 50, screenBaseWidth * 50, screenBaseHeight * 10), SavePresetWindow, "プリセットを保存しますか？");
+                }
+            }
+
+            if (showSaveWearPresetWindow)
+            {
+                if (isLandscape)
+                {
+                    GUI.Window(6549868, new Rect(screenBaseWidth * 50, screenBaseHeight * 10, screenBaseWidth * 50, screenBaseHeight * 10), SaveWearPresetWindow, "衣服プリセットを保存しますか？");
+                }
+                else
+                {
+                    GUI.Window(6549868, new Rect(screenBaseWidth * 30, screenBaseHeight * 50, screenBaseWidth * 50, screenBaseHeight * 10), SaveWearPresetWindow, "衣服プリセットを保存しますか？");
                 }
             }
         }
@@ -343,6 +383,11 @@ namespace CAST
                 {
                     showMaidDeleteWindow = !showMaidDeleteWindow;
                 }
+            }
+
+            if (GUI.Button(new Rect(padding, windowHeight - ((windowHeight / 8) - (windowHeight / 8) - 20), windowWidth - (padding * 2), windowHeight / 8 - padding), "衣服プリセット保存"))
+            {
+                showSaveWearPresetWindow = !showSaveWearPresetWindow;
             }
         }
 
@@ -488,6 +533,180 @@ namespace CAST
                 {
                     editMaid.FaceBlend(preset.faceBlend);
                 }
+                reader.Close();
+            }
+
+        }
+
+        private void SaveWearPresetWindow(int id)
+        {
+            var windowBaseW = screenBaseWidth * 50;
+            var windowBaseH = screenBaseHeight * 15;
+            var editStyle = GUI.skin.GetStyle("textField");
+            editStyle.fontSize = 34;
+            editStyle.alignment = TextAnchor.MiddleCenter;
+
+            saveWearPresetFileName = GUI.TextField(new Rect(windowBaseW / 4, windowBaseH / 4 - windowBaseW / 16 - 5, windowBaseW / 2, windowBaseW / 8), saveWearPresetFileName, editStyle);
+
+            if (GUI.Button(new Rect(windowBaseW / 4, windowBaseH / 4 + windowBaseW / 16 + 5, windowBaseW / 2, windowBaseW / 8), "保存"))
+            {
+                string presetDirectory = AFileSystemBase.base_path + App.base_path + App.wear_preset_path;
+                if (!Directory.Exists(presetDirectory))
+                {
+                    Directory.CreateDirectory(presetDirectory);
+                }
+
+                WearPreset wpreset = new WearPreset();
+                wpreset.Pwear = SceneEdit.Instance.EditMaid.GetProp(MPN.wear).strFileName;
+                wpreset.Pskirt = SceneEdit.Instance.EditMaid.GetProp(MPN.skirt).strFileName;
+                wpreset.Pmizugi = SceneEdit.Instance.EditMaid.GetProp(MPN.mizugi).strFileName;
+                wpreset.Pbra = SceneEdit.Instance.EditMaid.GetProp(MPN.bra).strFileName;
+                wpreset.Ppanz = SceneEdit.Instance.EditMaid.GetProp(MPN.panz).strFileName;
+                wpreset.Pstkg = SceneEdit.Instance.EditMaid.GetProp(MPN.stkg).strFileName;
+                wpreset.Pshoes = SceneEdit.Instance.EditMaid.GetProp(MPN.shoes).strFileName;
+                wpreset.Pheadset = SceneEdit.Instance.EditMaid.GetProp(MPN.headset).strFileName;
+                wpreset.Pglove = SceneEdit.Instance.EditMaid.GetProp(MPN.glove).strFileName;
+                wpreset.Pacchana = SceneEdit.Instance.EditMaid.GetProp(MPN.acchana).strFileName;
+                wpreset.Pacckami = SceneEdit.Instance.EditMaid.GetProp(MPN.acckami).strFileName;
+                wpreset.Pacckamisub = SceneEdit.Instance.EditMaid.GetProp(MPN.acckamisub).strFileName;
+                wpreset.Paccmimi = SceneEdit.Instance.EditMaid.GetProp(MPN.accmimi).strFileName;
+                wpreset.Pacckubi = SceneEdit.Instance.EditMaid.GetProp(MPN.acckubi).strFileName;
+                wpreset.Pacckubiwa = SceneEdit.Instance.EditMaid.GetProp(MPN.acckubiwa).strFileName;
+                wpreset.Paccheso = SceneEdit.Instance.EditMaid.GetProp(MPN.accheso).strFileName;
+                wpreset.Paccude = SceneEdit.Instance.EditMaid.GetProp(MPN.accude).strFileName;
+                wpreset.Paccashi = SceneEdit.Instance.EditMaid.GetProp(MPN.accashi).strFileName;
+                wpreset.Paccsenaka = SceneEdit.Instance.EditMaid.GetProp(MPN.accsenaka).strFileName;
+                wpreset.Paccshippo = SceneEdit.Instance.EditMaid.GetProp(MPN.accshippo).strFileName;
+                wpreset.Pmegane = SceneEdit.Instance.EditMaid.GetProp(MPN.megane).strFileName;
+                wpreset.Pacchat = SceneEdit.Instance.EditMaid.GetProp(MPN.acchat).strFileName;
+                wpreset.Ponepiece = SceneEdit.Instance.EditMaid.GetProp(MPN.onepiece).strFileName;
+
+                StreamWriter streamWriterW = new StreamWriter(presetDirectory + "/" + saveWearPresetFileName + ".json");
+                streamWriterW.Write(JsonUtility.ToJson(wpreset));
+                streamWriterW.Close();
+
+                showSaveWearPresetWindow = false;
+            }
+        }
+
+        private void LoadWearPresetUI()
+        {
+            var buttonStyle = GUI.skin.GetStyle("button");
+            buttonStyle.fontSize = 34;
+
+            int maxPage = presetFilesW.Length / 3;
+            if (WpresetPage > 0)
+            {
+                if (GUI.Button(new Rect(Screen.width - (screenBaseWidth * 35) - 10, screenBaseHeight * 50, screenBaseWidth * 35 / 4, screenBaseWidth * 35 / 4), "←", buttonStyle))
+                {
+                    WpresetPage -= 1;
+                }
+            }
+
+            if (WpresetPage < maxPage)
+            {
+                if (GUI.Button(new Rect(Screen.width - (screenBaseWidth * 35) + (screenBaseWidth * 35 / 4), screenBaseHeight * 50, screenBaseWidth * 35 / 4, screenBaseWidth * 35 / 4), "→", buttonStyle))
+                {
+                    WpresetPage += 1;
+                }
+            }
+
+            if (GUI.Button(new Rect(10, screenBaseHeight * 60, screenBaseWidth * 90, screenBaseHeight * 5), Path.GetFileNameWithoutExtension(presetFilesW[0 + (3 * WpresetPage)])))
+            {
+                StreamReader reader = new StreamReader(presetFilesW[0 + (3 * WpresetPage)]);
+                string jsonStr = reader.ReadToEnd();
+                WearPreset preset = JsonUtility.FromJson<WearPreset>(jsonStr);
+                Maid editMaid = SceneEdit.Instance.EditMaid;
+                editMaid.SetProp(MPN.wear, preset.Pwear, 0);
+                editMaid.SetProp(MPN.skirt, preset.Pskirt, 0);
+                editMaid.SetProp(MPN.mizugi, preset.Pmizugi, 0);
+                editMaid.SetProp(MPN.bra, preset.Pbra, 0);
+                editMaid.SetProp(MPN.panz, preset.Ppanz, 0);
+                editMaid.SetProp(MPN.stkg, preset.Pstkg, 0);
+                editMaid.SetProp(MPN.shoes, preset.Pshoes, 0);
+                editMaid.SetProp(MPN.headset, preset.Pheadset, 0);
+                editMaid.SetProp(MPN.glove, preset.Pglove, 0);
+                editMaid.SetProp(MPN.acchana, preset.Pacchana, 0);
+                editMaid.SetProp(MPN.acckami, preset.Pacckami, 0);
+                editMaid.SetProp(MPN.acckamisub, preset.Pacckamisub, 0);
+                editMaid.SetProp(MPN.accmimi, preset.Paccmimi, 0);
+                editMaid.SetProp(MPN.acckubi, preset.Pacckubi, 0);
+                editMaid.SetProp(MPN.acckubiwa, preset.Pacckubiwa, 0);
+                editMaid.SetProp(MPN.accheso, preset.Paccheso, 0);
+                editMaid.SetProp(MPN.accude, preset.Paccude, 0);
+                editMaid.SetProp(MPN.accashi, preset.Paccashi, 0);
+                editMaid.SetProp(MPN.accsenaka, preset.Paccsenaka, 0);
+                editMaid.SetProp(MPN.accshippo, preset.Paccshippo, 0);
+                editMaid.SetProp(MPN.megane, preset.Pmegane, 0);
+                editMaid.SetProp(MPN.acchat, preset.Pacchat, 0);
+                editMaid.SetProp(MPN.onepiece, preset.Ponepiece, 0);
+                editMaid.AllProcProp();
+                reader.Close();
+            }
+
+            if (GUI.Button(new Rect(10, screenBaseHeight * 65, screenBaseWidth * 90, screenBaseHeight * 5), Path.GetFileNameWithoutExtension(presetFilesW[1 + (3 * WpresetPage)])))
+            {
+                StreamReader reader = new StreamReader(presetFilesW[1 + (3 * WpresetPage)]);
+                string jsonStr = reader.ReadToEnd();
+                WearPreset preset = JsonUtility.FromJson<WearPreset>(jsonStr);
+                Maid editMaid = SceneEdit.Instance.EditMaid;
+                editMaid.SetProp(MPN.wear, preset.Pwear, 0);
+                editMaid.SetProp(MPN.skirt, preset.Pskirt, 0);
+                editMaid.SetProp(MPN.mizugi, preset.Pmizugi, 0);
+                editMaid.SetProp(MPN.bra, preset.Pbra, 0);
+                editMaid.SetProp(MPN.panz, preset.Ppanz, 0);
+                editMaid.SetProp(MPN.stkg, preset.Pstkg, 0);
+                editMaid.SetProp(MPN.shoes, preset.Pshoes, 0);
+                editMaid.SetProp(MPN.headset, preset.Pheadset, 0);
+                editMaid.SetProp(MPN.glove, preset.Pglove, 0);
+                editMaid.SetProp(MPN.acchana, preset.Pacchana, 0);
+                editMaid.SetProp(MPN.acckami, preset.Pacckami, 0);
+                editMaid.SetProp(MPN.acckamisub, preset.Pacckamisub, 0);
+                editMaid.SetProp(MPN.accmimi, preset.Paccmimi, 0);
+                editMaid.SetProp(MPN.acckubi, preset.Pacckubi, 0);
+                editMaid.SetProp(MPN.acckubiwa, preset.Pacckubiwa, 0);
+                editMaid.SetProp(MPN.accheso, preset.Paccheso, 0);
+                editMaid.SetProp(MPN.accude, preset.Paccude, 0);
+                editMaid.SetProp(MPN.accashi, preset.Paccashi, 0);
+                editMaid.SetProp(MPN.accsenaka, preset.Paccsenaka, 0);
+                editMaid.SetProp(MPN.accshippo, preset.Paccshippo, 0);
+                editMaid.SetProp(MPN.megane, preset.Pmegane, 0);
+                editMaid.SetProp(MPN.acchat, preset.Pacchat, 0);
+                editMaid.SetProp(MPN.onepiece, preset.Ponepiece, 0);
+                editMaid.AllProcProp();
+                reader.Close();
+            }
+
+            if (GUI.Button(new Rect(10, screenBaseHeight * 70, screenBaseWidth * 90, screenBaseHeight * 5), Path.GetFileNameWithoutExtension(presetFilesW[2 + (3 * WpresetPage)])))
+            {
+                StreamReader reader = new StreamReader(presetFilesW[2 + (3 * WpresetPage)]);
+                string jsonStr = reader.ReadToEnd();
+                WearPreset preset = JsonUtility.FromJson<WearPreset>(jsonStr);
+                Maid editMaid = SceneEdit.Instance.EditMaid;
+                editMaid.SetProp(MPN.wear, preset.Pwear, 0);
+                editMaid.SetProp(MPN.skirt, preset.Pskirt, 0);
+                editMaid.SetProp(MPN.mizugi, preset.Pmizugi, 0);
+                editMaid.SetProp(MPN.bra, preset.Pbra, 0);
+                editMaid.SetProp(MPN.panz, preset.Ppanz, 0);
+                editMaid.SetProp(MPN.stkg, preset.Pstkg, 0);
+                editMaid.SetProp(MPN.shoes, preset.Pshoes, 0);
+                editMaid.SetProp(MPN.headset, preset.Pheadset, 0);
+                editMaid.SetProp(MPN.glove, preset.Pglove, 0);
+                editMaid.SetProp(MPN.acchana, preset.Pacchana, 0);
+                editMaid.SetProp(MPN.acckami, preset.Pacckami, 0);
+                editMaid.SetProp(MPN.acckamisub, preset.Pacckamisub, 0);
+                editMaid.SetProp(MPN.accmimi, preset.Paccmimi, 0);
+                editMaid.SetProp(MPN.acckubi, preset.Pacckubi, 0);
+                editMaid.SetProp(MPN.acckubiwa, preset.Pacckubiwa, 0);
+                editMaid.SetProp(MPN.accheso, preset.Paccheso, 0);
+                editMaid.SetProp(MPN.accude, preset.Paccude, 0);
+                editMaid.SetProp(MPN.accashi, preset.Paccashi, 0);
+                editMaid.SetProp(MPN.accsenaka, preset.Paccsenaka, 0);
+                editMaid.SetProp(MPN.accshippo, preset.Paccshippo, 0);
+                editMaid.SetProp(MPN.megane, preset.Pmegane, 0);
+                editMaid.SetProp(MPN.acchat, preset.Pacchat, 0);
+                editMaid.SetProp(MPN.onepiece, preset.Ponepiece, 0);
+                editMaid.AllProcProp();
                 reader.Close();
             }
 
