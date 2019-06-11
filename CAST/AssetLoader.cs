@@ -14,6 +14,31 @@ namespace CAST
             this.fileSystem = fileSystem;
         }
 
+
+        public void loadDirectory(String path)
+        {
+            if (Directory.Exists(path))
+            {
+                var dirList = Directory.GetDirectories(path);
+                foreach(var dir in dirList)
+                {
+                    loadDirectory(dir);
+                }
+                var fileList = Directory.GetFiles(path);
+                foreach(var file in fileList)
+                {
+                    loadDirectory(file);
+                }
+            }
+            else if(File.Exists(path))
+            {
+                var split = path.Split('.');
+                if (split[split.Length - 1] == "assets")
+                {
+                    AddFolder(path.Replace(".assets", ""));
+                }
+            }
+        }
         public void AddFolder(String path)
         {
             String assetsPath = path.ToLower() + ".assets";

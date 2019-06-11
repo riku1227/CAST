@@ -25,7 +25,12 @@ namespace CAST
 
         public static void InitGameUty()
         {
-            Util.setPrivateStaticField(typeof(GameUty), "m_FileSystem", new FileSystemAB());
+            var fileSystemAB = new FileSystemAB();
+            var assetLoader = new AssetLoader(fileSystemAB);
+            var modDirectory = AFileSystemBase.base_path + "CAST/";
+            assetLoader.loadDirectory(modDirectory);
+            
+            Util.setPrivateStaticField(typeof(GameUty), "m_FileSystem", fileSystemAB);
             GameUty.UpdateFileSystemPath();
             GameUty.UpdateFileSystemPathOld();
         }
