@@ -18,6 +18,7 @@ namespace CAST
         //SceneFirstDownload#Start() で一番最初に呼び出される
         public static void InitMODManager()
         {
+            UI.LogUI.Init();
             var go = new GameObject();
             DontDestroyOnLoad(go);
             go.AddComponent<MODManager>();
@@ -38,11 +39,6 @@ namespace CAST
         void Start()
         {
             SceneManager.sceneLoaded += onSceneLoaded;
-        }
-
-        void OnGUI()
-        {
-            GUI.TextArea(new Rect(10, 10, 300, 100), temp);
         }
 
         void onSceneLoaded(Scene nextScene, LoadSceneMode mode)
