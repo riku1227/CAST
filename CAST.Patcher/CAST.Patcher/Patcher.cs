@@ -70,6 +70,28 @@ namespace CAST.Patcher
             ilProcessor.Emit(OpCodes.Ret);
         }
 
+        /*
+         * 対象: EditPoseData.EditPoseData
+         * PoseDataの読み込みが終わったあと MODManager.InitPoseData を呼び出す
+         * 
+         * EditPoseData.EditPoseData() {
+         *     EditPoseData.Load();
+         *     CAST.MODManager.InitPoseData();
+         * }
+         */
+        public void PatchEditPoseData_EditPoseData()
+        {
+            var EditPoseData = target.MainModule.GetType("SCENE_EDIT.EditPoseData");
+            var EditPoseData_EditPoseData = EditPoseData.Methods.First(x => x.Name == ".cctor");
+
+            var MODManager = inject.MainModule.GetType("CAST.MODManager");
+            var MODManager_InitPoseData = MODManager.Methods.First(x => x.IsStatic && x.Name == "InitPoseData");
+            var MODManager_InitPoseData_Ref = EditPoseData_EditPoseData.Module.ImportReference(MODManager_InitPoseData);
+
+            var ilProcessor = EditPoseData_EditPoseData.Body.GetILProcessor();
+            ilProcessor.InsertBefore(ilProcessor.Body.Instructions[ilProcessor.Body.Instructions.Count - 1], ilProcessor.Create(OpCodes.Call, MODManager_InitPoseData_Ref));
+        }
+
         public void ExportDLL(String baseDirectory, String outputDllName)
         {
             target.Write(Path.Combine(baseDirectory, outputDllName));

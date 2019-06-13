@@ -32,6 +32,7 @@ namespace CAST.Patcher
 
             patcher.PatchSceneFirstDownload_Start();
             patcher.PatchGameUty_Init();
+            patcher.PatchEditPoseData_EditPoseData();
 
             patcher.ExportDLL(baseDirectory, outputDllName);
         }

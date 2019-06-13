@@ -30,6 +30,11 @@ namespace CAST
             GameUty.UpdateFileSystemPathOld();
         }
 
+        public static void InitPoseData()
+        {
+
+        }
+
         void Start()
         {
             SceneManager.sceneLoaded += onSceneLoaded;
