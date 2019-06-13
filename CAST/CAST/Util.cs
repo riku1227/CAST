@@ -28,5 +28,11 @@ namespace CAST
             FieldInfo info = type.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
             info.SetValue(instance, value);
         }
+
+        public static void invokePrivateSetter(Type type, object instance, String fieldName, object value)
+        {
+            var method = type.GetMethod("set_" + fieldName, BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Instance);
+            method.Invoke(instance, new object[1] { value });
+        }
     }
 }
