@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Harmony;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,16 +9,21 @@ using System.Text;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
 
 namespace CAST
 {
     public class MODManager : MonoBehaviour
     {
         static String temp = "";
+        static FileSystemStorage fileSystem;
 
         //SceneFirstDownload#Start() で一番最初に呼び出される
         public static void InitMODManager()
         {
+            var harmony = HarmonyInstance.Create("com.riku1227.cast");
+            //harmony.PatchAll(Assembly.GetExecutingAssembly());
             UI.LogUI.Init();
             var go = new GameObject();
             DontDestroyOnLoad(go);
@@ -26,12 +32,12 @@ namespace CAST
 
         public static void InitGameUty()
         {
-            var fileSystemAB = new FileSystemAB();
-            var assetLoader = new AssetLoader(fileSystemAB);
+            fileSystem = new FileSystemStorage();
+            var assetLoader = new AssetLoader(fileSystem);
             var modDirectory = AFileSystemBase.base_path + "CAST/";
             assetLoader.loadDirectory(modDirectory);
             
-            Util.setPrivateStaticField(typeof(GameUty), "m_FileSystem", fileSystemAB);
+            Util.setPrivateStaticField(typeof(GameUty), "m_FileSystem", fileSystem);
             GameUty.UpdateFileSystemPath();
             GameUty.UpdateFileSystemPathOld();
         }
@@ -48,8 +54,19 @@ namespace CAST
             {
                 //カメラのy軸制限を解除
                 GameMain.Instance.MainCamera.GetComponent<UltimateOrbitCamera>().limitY = false;
-                var abFileSystem = GameUty.FileSystem as FileSystemAB;
+
+                //uGUISystemDialog.OpenYesNo("TestDialog", delegate() { }, delegate () { });
             }
+        }
+    }
+
+    [HarmonyPatch (typeof(String))]
+    [HarmonyPatch ("ToUpper")]
+    public class Patch
+    {
+        static void Prefix()
+        {
+            Debug.Log("ToUpper");
         }
     }
 }
