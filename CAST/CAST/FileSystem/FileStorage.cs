@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace CAST
+namespace CAST.FileSystem
 {
     class FileStorage : AFileBase
     {

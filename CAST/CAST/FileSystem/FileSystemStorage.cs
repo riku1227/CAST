@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace CAST
+namespace CAST.FileSystem
 {
     class FileSystemStorage : FileSystemAB
     {
