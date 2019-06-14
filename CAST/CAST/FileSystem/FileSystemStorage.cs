@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine;
 
 namespace CAST.FileSystem
 {
@@ -33,6 +34,24 @@ namespace CAST.FileSystem
                     loadFilePathList[Path.GetFileName(path)] = path;
                 }
             }
+        }
+
+        public override Texture GetTexture(string file_name)
+        {
+            file_name = file_name.ToLower();
+            file_name = Path.GetFileNameWithoutExtension(file_name) + ".png";
+            FileSystemAB.AssetData assetData;
+            var filePath = "";
+            var alistDic = Util.getPrivateField(typeof(FileSystemAB), this, "m_fileDatas") as Dictionary<String, FileSystemAB.AssetData>;
+            if (alistDic.TryGetValue(file_name, out assetData))
+            {
+                return assetData.assetBundle.LoadAsset<Texture2D>(file_name);
+            }
+            else if (loadFilePathList.TryGetValue(file_name, out filePath))
+            {
+                return PNGToTexture2D(filePath);
+            }
+            return null;
         }
 
         public override AFileBase FileOpen(string file_name)
@@ -68,6 +87,34 @@ namespace CAST.FileSystem
                 result = File.Exists(filePath);
             }
             return result;
+        }
+
+        public Texture2D PNGToTexture2D(String path)
+        {
+            byte[] value;
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read)) {
+                using (var binaryReader = new BinaryReader(fileStream))
+                {
+                    value = binaryReader.ReadBytes((int)binaryReader.BaseStream.Length);
+                }
+            }
+
+            var pos = 16;
+            int width = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                width = width * 256 + value[pos++];
+            }
+
+            int height = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                height = height * 256 + value[pos++];
+            }
+
+            Texture2D texture = new Texture2D(width, height);
+            texture.LoadImage(value);
+            return texture;
         }
 
         public Dictionary<String, String> loadFilePathList = new Dictionary<String, String>();
