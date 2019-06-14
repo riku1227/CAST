@@ -1,4 +1,5 @@
 ﻿using CAST.FileSystem;
+using CAST.Loader;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,7 +8,7 @@ namespace CAST
 {
     public class MODManager : MonoBehaviour
     {
-        static FileSystemStorage fileSystem;
+        public static FileSystemStorage fileSystem;
 
         //SceneFirstDownload#Start() で一番最初に呼び出される
         public static void InitMODManager()
@@ -32,7 +33,8 @@ namespace CAST
 
         public static void InitPoseData()
         {
-
+            Debug.Log("\n InitPoseData ");
+            PoseDataLoader.LoadPoseData();
         }
 
         void Start()
