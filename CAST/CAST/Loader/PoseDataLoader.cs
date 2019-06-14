@@ -26,7 +26,22 @@ namespace CAST.Loader
                     {
                         var csv = reader.ReadLine().Split(',');
                         var csvLength = csv.Length;
-                        if (csvLength >= 2)
+
+                        if(csvLength == 6)
+                        {
+                            var editPoseData = new EditPoseData();
+                            var editPoseDataType = typeof(EditPoseData);
+                            Util.invokePrivateSetter(editPoseDataType, editPoseData, "ID", int.Parse(csv[0]));
+                            Util.invokePrivateSetter(editPoseDataType, editPoseData, "IconFileName", csv[1]);
+                            Util.invokePrivateSetter(editPoseDataType, editPoseData, "LockBoneName", csv[2]);
+                            Util.invokePrivateSetter(editPoseDataType, editPoseData, "FileName", csv[3]);
+                            Util.invokePrivateSetter(editPoseDataType, editPoseData, "Face", csv[4]);
+                            Util.invokePrivateSetter(editPoseDataType, editPoseData, "FaceBlend", csv[5]);
+
+                            EditPoseData.DataList.Add(editPoseData);
+                            EditPoseData.EnabledList.Add(int.Parse(csv[0]));
+                        }
+                        else if (csvLength >= 2)
                         {
                             var editPoseData = new EditPoseData();
                             var editPoseDataType = typeof(EditPoseData);
