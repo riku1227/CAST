@@ -7,11 +7,11 @@ using UnityEngine;
 
 namespace CAST.FileSystem
 {
-    class FileStorage : AFileBase
+    public class FileStorage : AFileBase
     {
-        private String filePath;
-        private ulong fileSize;
-        private long pos;
+        public String filePath;
+        public ulong fileSize;
+        public long pos;
         public FileStorage(String filePath)
         {
             this.filePath = filePath;

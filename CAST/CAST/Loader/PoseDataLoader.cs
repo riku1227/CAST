@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace CAST.Loader
 {
-    class PoseDataLoader
+    public class PoseDataLoader
     {
         public static int poseId = 10000;
         public static void LoadPoseData()

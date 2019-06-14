@@ -4,7 +4,7 @@ using System.IO;
 
 namespace CAST.FileSystem
 {
-    class FileSystemStorage : FileSystemAB
+    public class FileSystemStorage : FileSystemAB
     {
         public FileSystemStorage() : base()
         {

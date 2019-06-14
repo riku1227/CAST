@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace CAST
 {
-    class AssetLoader
+    public class AssetLoader
     {
         public FileSystemAB fileSystem;
         public AssetLoader(FileSystemAB fileSystem)

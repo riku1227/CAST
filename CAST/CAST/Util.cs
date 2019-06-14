@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace CAST
 {
-    class Util
+    public class Util
     {
         public static object getPrivateStaticField(Type type, String fieldName)
         {
