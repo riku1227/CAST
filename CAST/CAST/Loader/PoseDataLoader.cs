@@ -71,10 +71,10 @@ namespace CAST.Loader
                             poseId++;
                         }
                     }
-                    foreach(var value in EditPoseData.DataList)
+                    /* foreach(var value in EditPoseData.DataList)
                     {
                         Debug.Log("Enabled: " + value.ID + " : " + value.FileName);
-                    }
+                    } */
                 }
             }
         }

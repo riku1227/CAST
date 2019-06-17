@@ -93,6 +93,20 @@ namespace CAST.Patcher
             ilProcessor.InsertAfter(ilProcessor.Body.Instructions.Last(), ilProcessor.Create(OpCodes.Ret));
         }
 
+        public void PatchEditMenuItemData_Load()
+        {
+            var EditMenuItemData = target.MainModule.GetType("SCENE_EDIT.EditMenuItemData");
+            var EditMenuItemData_Load = EditMenuItemData.Methods.First(x => x.Name == "Load");
+
+            var MODManager = inject.MainModule.GetType("CAST.MODManager");
+            var MODManager_InitPartsData = MODManager.Methods.First(x => x.IsStatic && x.Name == "InitPartsData");
+            var MODManager_InitPartsData_Ref = EditMenuItemData_Load.Module.ImportReference(MODManager_InitPartsData);
+
+            var ilProcessor = EditMenuItemData_Load.Body.GetILProcessor();
+            ilProcessor.Replace(ilProcessor.Body.Instructions.Last(), ilProcessor.Create(OpCodes.Call, MODManager_InitPartsData_Ref));
+            ilProcessor.InsertAfter(ilProcessor.Body.Instructions.Last(), ilProcessor.Create(OpCodes.Ret));
+        }
+
         public void ExportDLL(String baseDirectory, String outputDllName)
         {
             target.Write(Path.Combine(baseDirectory, outputDllName));

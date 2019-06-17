@@ -37,6 +37,12 @@ namespace CAST
             PoseDataLoader.LoadPoseData();
         }
 
+        public static void InitPartsData()
+        {
+            Debug.Log("\n InitPartsData ");
+            PartsLoader.LoadParts();
+        }
+
         void Start()
         {
             SceneManager.sceneLoaded += onSceneLoaded;
