@@ -21,7 +21,7 @@ namespace CAST.Loader
             var baseMenuDic = MODManager.fileSystem.loadFilePathList.Where(x =>
             {
                 var fileNmae = x.Key.Replace("_i_.menu", ".menu");
-                if(fileNmae.IndexOf(".menu") != -1)
+                if(Path.GetExtension(fileNmae) == ".menu")
                 {
                     return !Regex.IsMatch(x.Key, "_z\\d+\\.menu$");
                 }
