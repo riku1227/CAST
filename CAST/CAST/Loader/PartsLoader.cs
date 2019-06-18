@@ -23,7 +23,7 @@ namespace CAST.Loader
                 var fileNmae = x.Key.Replace("_i_.menu", ".menu");
                 if(Path.GetExtension(fileNmae) == ".menu")
                 {
-                    if(fileNmae.IndexOf("_zurashi") == -1 && fileNmae.IndexOf("_mekure") == -1 || fileNmae.IndexOf("_porori") == -1)
+                    if(fileNmae.IndexOf("_zurashi") == -1 && fileNmae.IndexOf("_mekure") == -1 && fileNmae.IndexOf("_porori") == -1)
                     {
                         return !Regex.IsMatch(x.Key, "_z\\d+\\.menu$");
                     }
