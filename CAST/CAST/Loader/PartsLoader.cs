@@ -23,7 +23,7 @@ namespace CAST.Loader
                 var fileNmae = x.Key.Replace("_i_.menu", ".menu");
                 if(Path.GetExtension(fileNmae) == ".menu")
                 {
-                    if(fileNmae.IndexOf("_zurashi") == -1 && fileNmae.IndexOf("_mekure") == -1 && fileNmae.IndexOf("_porori") == -1)
+                    if(fileNmae.IndexOf("_zurashi") == -1 && fileNmae.IndexOf("_mekure") == -1 || fileNmae.IndexOf("_porori") == -1)
                     {
                         return !Regex.IsMatch(x.Key, "_z\\d+\\.menu$");
                     }
@@ -32,9 +32,9 @@ namespace CAST.Loader
             }
             );
 
-            List<EditMenuItemData> list = new List<EditMenuItemData>();
-            Dictionary<EditMenuItemData, string> dictionary = new Dictionary<EditMenuItemData, string>();
-            Dictionary<EditMenuItemData, List<string>> dictionary2 = new Dictionary<EditMenuItemData, List<string>>();
+            List<EditMenuItemData> editMenuDataList = new List<EditMenuItemData>();
+            Dictionary<EditMenuItemData, string> childMenuDataDictionary = new Dictionary<EditMenuItemData, string>();
+            Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames = new Dictionary<EditMenuItemData, List<string>>();
 
             foreach (var item in baseMenuDic)
             {
@@ -49,31 +49,31 @@ namespace CAST.Loader
                         var menuData = ReadMenuFile(binaryReader, item.Key);
                         if(menuData != null)
                         {
-                            AddMenuItem(menuData, displayMenuFilesName, "", ref list, ref dictionary, ref dictionary2);
-                            LoadChildMenu(item.Key.Replace("_i_.menu", ".menu").Replace(".menu", ""), item.Key, ref list, ref dictionary, ref dictionary2);
+                            AddMenuItem(menuData, displayMenuFilesName, "", ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames);
+                            LoadChildMenu(item.Key.Replace("_i_.menu", ".menu").Replace(".menu", ""), item.Key, ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames);
                         }
                     }
                 }
             }
 
-            EditMenuItemData.SortPriority(ref list, true);
-            foreach (EditMenuItemData editMenuItemData2 in list)
+            EditMenuItemData.SortPriority(ref editMenuDataList, true);
+            foreach (EditMenuItemData editMenuItemData2 in editMenuDataList)
             {
-                if (dictionary.ContainsKey(editMenuItemData2))
+                if (childMenuDataDictionary.ContainsKey(editMenuItemData2))
                 {
                     Debug.Log(editMenuItemData2.ItemName);
-                    Util.invokePrivateSetter(typeof(EditMenuItemData), editMenuItemData2, "ParentMenu", EditMenuItemData.ItemFileNameDic[dictionary[editMenuItemData2]]);
+                    Util.invokePrivateSetter(typeof(EditMenuItemData), editMenuItemData2, "ParentMenu", EditMenuItemData.ItemFileNameDic[childMenuDataDictionary[editMenuItemData2]]);
                 }
-                if (dictionary2.ContainsKey(editMenuItemData2))
+                if (parentInChildMenuFileNames.ContainsKey(editMenuItemData2))
                 {
-                    foreach (string key in dictionary2[editMenuItemData2])
+                    foreach (string key in parentInChildMenuFileNames[editMenuItemData2])
                     {
                         editMenuItemData2.ChildlenMenuList.Add(EditMenuItemData.ItemFileNameDic[key]);
                     }
                     EditMenuItemData.SortPriority(ref editMenuItemData2.m_childlenMenuList, true);
                 }
             }
-            foreach (EditMenuItemData editMenuItemData3 in list)
+            foreach (EditMenuItemData editMenuItemData3 in editMenuDataList)
             {
                 if (!EditMenuItemData.ItemMenuDic.ContainsKey(editMenuItemData3.Mpn))
                 {
@@ -106,7 +106,7 @@ namespace CAST.Loader
         }
 
         public static void LoadChildMenu(String parentMenuBaseFileName, String parentMenuFileName,
-            ref List<EditMenuItemData> list, ref Dictionary<EditMenuItemData, string> dictionary, ref Dictionary<EditMenuItemData, List<string>> dictionary2)
+            ref List<EditMenuItemData> editMenuDataList, ref Dictionary<EditMenuItemData, string> childMenuDataDictionary, ref Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames)
         {
             var childList = MODManager.fileSystem.loadFilePathList.Where(x =>
             {
@@ -127,7 +127,7 @@ namespace CAST.Loader
                         var menuData = ReadMenuFile(binaryReader, item.Key);
                         if(menuData != null)
                         {
-                            AddMenuItem(menuData, "", parentMenuFileName, ref list, ref dictionary, ref dictionary2);
+                            AddMenuItem(menuData, "", parentMenuFileName, ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames);
                         }
                     }
                 }
@@ -211,11 +211,11 @@ namespace CAST.Loader
 
         public static void AddMenuItem(
             EditMenuItemData editMenuItemData, String displayMenuFiles, String parentMenuFileName,
-            ref List<EditMenuItemData> list, ref Dictionary<EditMenuItemData, string> dictionary, ref Dictionary<EditMenuItemData, List<string>> dictionary2)
+            ref List<EditMenuItemData> editMenuDataList, ref Dictionary<EditMenuItemData, string> childMenuDataDictionary, ref Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames)
         {
             if (!string.IsNullOrEmpty(parentMenuFileName))
             {
-                dictionary.Add(editMenuItemData, editMenuItemData.MenuFileName);
+                childMenuDataDictionary.Add(editMenuItemData, editMenuItemData.MenuFileName);
             }
             string[] array2 = displayMenuFiles.Split(new char[]
             {
@@ -231,10 +231,10 @@ namespace CAST.Loader
             }
             if (list2.Count > 0)
             {
-                dictionary2.Add(editMenuItemData, list2);
+                parentInChildMenuFileNames.Add(editMenuItemData, list2);
             }
 
-            list.Add(editMenuItemData);
+            editMenuDataList.Add(editMenuItemData);
             EditMenuItemData.ItemFileNameDic.Add(editMenuItemData.MenuFileName, editMenuItemData);
         }
     }
