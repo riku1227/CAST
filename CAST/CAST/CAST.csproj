@@ -1,0 +1,267 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{ABFEF490-F6C0-4ED8-974A-6C137A2570FE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CAST</RootNamespace>
+    <AssemblyName>CAST</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-UnityScript-firstpass">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\Assembly-UnityScript-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="Boo.Lang">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\Boo.Lang.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="SALSA">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\SALSA.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="UnityEngine.AccessibilityModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.AccessibilityModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.AIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ARModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.ARModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.BaselibModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.BaselibModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClothModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.ClothModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CloudWebServicesModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.CloudWebServicesModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CrashReportingModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.CrashReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DirectorModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.DirectorModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.FacebookModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.FacebookModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.FileSystemHttpModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.FileSystemHttpModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GameCenterModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.GameCenterModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GridModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.GridModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.HotReloadModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.HotReloadModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.InputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.JSONSerializeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.LocalizationModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.LocalizationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticlesLegacyModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.ParticlesLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PerformanceReportingModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.PerformanceReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ProfilerModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.ProfilerModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SharedInternalsModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpatialTracking">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.SpatialTracking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpatialTrackingModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.SpatialTrackingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteMaskModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.SpriteMaskModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteShapeModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.SpriteShapeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.StreamingModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.StreamingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.StyleSheetsModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.StyleSheetsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SubstanceModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.SubstanceModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.TerrainModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainPhysicsModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TilemapModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.TilemapModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Timeline">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TimelineModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.TimelineModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TLSModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.TLSModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UmbraModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.UmbraModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UNETModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.UNETModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityConnectModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.UnityConnectModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VehiclesModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.VehiclesModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.VideoModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VRModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.VRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.WindModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.WindModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.XRModule">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityEngine.XRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityScript.Lang">
+      <HintPath>..\..\..\..\..\Documents\CustomCast\[0.00.01]custom_cast\custom_cast.apk-decompiled\assets\bin\Data\Managed\UnityScript.Lang.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssetLoader.cs" />
+    <Compile Include="FileSystem\FileSystemStorage.cs" />
+    <Compile Include="Loader\PartsLoader.cs" />
+    <Compile Include="Loader\PoseDataLoader.cs" />
+    <Compile Include="MODManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FileSystem\FileStorage.cs" />
+    <Compile Include="UI\LogUI.cs" />
+    <Compile Include="Util.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
