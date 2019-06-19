@@ -4,14 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using UnityEngine;
 
 namespace CAST.Loader
 {
     public class PartsLoader
     {
+        public static String childRegex = "_z\\d+\\.menu$";
         public static void LoadParts()
         {
             if (MODManager.fileSystem == null)
@@ -26,7 +25,7 @@ namespace CAST.Loader
                 {
                     if(fileNmae.IndexOf("zurashi") == -1 && fileNmae.IndexOf("mekure") == -1 && fileNmae.IndexOf("porori") == -1)
                     {
-                        return !Regex.IsMatch(fileNmae, "_z\\d+\\.menu$");
+                        return !Regex.IsMatch(fileNmae, childRegex);
                     }
                 }
                 return false;
@@ -52,11 +51,11 @@ namespace CAST.Loader
                         var menuData = ReadMenuFile(binaryReader, item.Key);
                         if(menuData != null)
                         {
-                            AddMenuItem(menuData, displayMenuFilesName, "", ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames, ref parentInDiffFileNames);
-                            LoadChildMenu(item.Key.Replace("_i_.menu", ".menu").Replace(".menu", ""), item.Key, ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames, ref parentInDiffFileNames);
+                            AddMenuItem(menuData, displayMenuFilesName, "", ref editMenuDataList, childMenuDataDictionary, parentInChildMenuFileNames, parentInDiffFileNames);
+                            LoadChildMenu(item.Key.Replace("_i_.menu", ".menu").Replace(".menu", ""), item.Key, ref editMenuDataList, childMenuDataDictionary, parentInChildMenuFileNames, parentInDiffFileNames);
                             if(!String.IsNullOrEmpty(menuData.zurashiMenuFileName) || !String.IsNullOrEmpty(menuData.mekureMenuFileName) || !String.IsNullOrEmpty(menuData.mekureBackMenuFileName))
                             {
-                                LoadDiffMenu(parentInDiffFileNames, parentInDiffData, ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames);
+                                LoadDiffMenu(parentInDiffFileNames, parentInDiffData, ref editMenuDataList, childMenuDataDictionary, parentInChildMenuFileNames);
                             }
                         }
                     }
@@ -102,7 +101,7 @@ namespace CAST.Loader
             var childList = MODManager.fileSystem.loadFilePathList.Where(x => 
             {
                 var fileName = x.Key.Replace("_i_.menu", ".menu");
-                if(Regex.IsMatch(fileName, baseMenuName + "_z\\d+\\.menu$"))
+                if(Regex.IsMatch(fileName, baseMenuName + childRegex))
                 {
                     return true;
                 }
@@ -120,13 +119,13 @@ namespace CAST.Loader
         }
 
         public static void LoadChildMenu(String parentMenuBaseFileName, String parentMenuFileName,
-            ref List<EditMenuItemData> editMenuDataList, ref Dictionary<EditMenuItemData, string> childMenuDataDictionary, ref Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames, 
-            ref Dictionary<String, List<String>> parentInDiffFileNames)
+            ref List<EditMenuItemData> editMenuDataList, Dictionary<EditMenuItemData, string> childMenuDataDictionary, Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames, 
+            Dictionary<String, List<String>> parentInDiffFileNames)
         {
             var childList = MODManager.fileSystem.loadFilePathList.Where(x =>
             {
                 var fileName = x.Key.Replace("_i_.menu", ".menu");
-                if (Regex.IsMatch(fileName, parentMenuBaseFileName + "_z\\d+\\.menu$"))
+                if (Regex.IsMatch(fileName, parentMenuBaseFileName + childRegex))
                 {
                     return true;
                 }
@@ -142,7 +141,7 @@ namespace CAST.Loader
                         var menuData = ReadMenuFile(binaryReader, item.Key);
                         if(menuData != null)
                         {
-                            AddMenuItem(menuData, "", parentMenuFileName, ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames, ref parentInDiffFileNames);
+                            AddMenuItem(menuData, "", parentMenuFileName, ref editMenuDataList, childMenuDataDictionary, parentInChildMenuFileNames, parentInDiffFileNames);
                         }
                     }
                 }
@@ -151,7 +150,7 @@ namespace CAST.Loader
         }
 
         public static void LoadDiffMenu(Dictionary<String, List<string>> parentInDiffFileNames,Dictionary<String, EditMenuItemData> parentInDiffData,
-            ref List<EditMenuItemData> editMenuDataList, ref Dictionary<EditMenuItemData, string> childMenuDataDictionary, ref Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames)
+            ref List<EditMenuItemData> editMenuDataList, Dictionary<EditMenuItemData, string> childMenuDataDictionary, Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames)
         {
             foreach (var diffFileNames in parentInDiffFileNames)
             {
@@ -166,7 +165,7 @@ namespace CAST.Loader
                                 var menuData = ReadMenuFile(binaryReader, fileName);
                                 if (menuData != null)
                                 {
-                                    AddMenuItem(menuData, "", fileName, ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames, ref parentInDiffFileNames, true, parentInDiffData);
+                                    AddMenuItem(menuData, "", fileName, ref editMenuDataList, childMenuDataDictionary, parentInChildMenuFileNames, parentInDiffFileNames, true, parentInDiffData);
                                 }
                             }
                         }
@@ -267,8 +266,8 @@ namespace CAST.Loader
 
         public static void AddMenuItem(
             EditMenuItemDataPlus editMenuItemDataPlus, String displayMenuFiles, String parentMenuFileName,
-            ref List<EditMenuItemData> editMenuDataList, ref Dictionary<EditMenuItemData, string> childMenuDataDictionary, ref Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames, 
-            ref Dictionary<String, List<String>> parentInDiffFileNames, bool isDiffParts = false, Dictionary<String, EditMenuItemData> parentInDiffData = null)
+            ref List<EditMenuItemData> editMenuDataList, Dictionary<EditMenuItemData, string> childMenuDataDictionary, Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames, 
+            Dictionary<String, List<String>> parentInDiffFileNames, bool isDiffParts = false, Dictionary<String, EditMenuItemData> parentInDiffData = null)
         {
             if (!string.IsNullOrEmpty(parentMenuFileName))
             {
@@ -291,82 +290,24 @@ namespace CAST.Loader
                 parentInChildMenuFileNames.Add(editMenuItemDataPlus.editMenuItemData, list2);
             }
 
-            if(!String.IsNullOrEmpty(editMenuItemDataPlus.zurashiMenuFileName))
+            if (String.IsNullOrEmpty(parentMenuFileName))
             {
-                if(String.IsNullOrEmpty(parentMenuFileName))
-                {
-                    if(!parentInDiffFileNames.ContainsKey(editMenuItemDataPlus.editMenuItemData.MenuFileName))
-                    {
-                        parentInDiffFileNames.Add(editMenuItemDataPlus.editMenuItemData.MenuFileName, new List<string>() { editMenuItemDataPlus.zurashiMenuFileName });
-                    }
-                    else
-                    {
-                        parentInDiffFileNames[editMenuItemDataPlus.editMenuItemData.MenuFileName].Add(editMenuItemDataPlus.zurashiMenuFileName);
-                    }
-                }
-                else
-                {
-                    if(!parentInDiffFileNames.ContainsKey(parentMenuFileName))
-                    {
-                        parentInDiffFileNames.Add(parentMenuFileName, new List<string>() { editMenuItemDataPlus.zurashiMenuFileName });
-                    }
-                    else
-                    {
-                        parentInDiffFileNames[parentMenuFileName].Add(editMenuItemDataPlus.zurashiMenuFileName);
-                    }
-                }
+                parentMenuFileName = editMenuItemDataPlus.editMenuItemData.MenuFileName;
+            }
+
+            if (!String.IsNullOrEmpty(editMenuItemDataPlus.zurashiMenuFileName))
+            {
+                AddDiffFile(parentMenuFileName, editMenuItemDataPlus.zurashiMenuFileName, parentInDiffFileNames);
             }
 
             if (!String.IsNullOrEmpty(editMenuItemDataPlus.mekureMenuFileName))
             {
-                if (String.IsNullOrEmpty(parentMenuFileName))
-                {
-                    if (!parentInDiffFileNames.ContainsKey(editMenuItemDataPlus.editMenuItemData.MenuFileName))
-                    {
-                        parentInDiffFileNames.Add(editMenuItemDataPlus.editMenuItemData.MenuFileName, new List<string>() { editMenuItemDataPlus.mekureMenuFileName });
-                    }
-                    else
-                    {
-                        parentInDiffFileNames[editMenuItemDataPlus.editMenuItemData.MenuFileName].Add(editMenuItemDataPlus.mekureMenuFileName);
-                    }
-                }
-                else
-                {
-                    if (!parentInDiffFileNames.ContainsKey(parentMenuFileName))
-                    {
-                        parentInDiffFileNames.Add(parentMenuFileName, new List<string>() { editMenuItemDataPlus.mekureMenuFileName });
-                    }
-                    else
-                    {
-                        parentInDiffFileNames[parentMenuFileName].Add(editMenuItemDataPlus.mekureMenuFileName);
-                    }
-                }
+                AddDiffFile(parentMenuFileName, editMenuItemDataPlus.mekureMenuFileName, parentInDiffFileNames);
             }
 
             if (!String.IsNullOrEmpty(editMenuItemDataPlus.mekureBackMenuFileName))
             {
-                if (String.IsNullOrEmpty(parentMenuFileName))
-                {
-                    if (!parentInDiffFileNames.ContainsKey(editMenuItemDataPlus.editMenuItemData.MenuFileName))
-                    {
-                        parentInDiffFileNames.Add(editMenuItemDataPlus.editMenuItemData.MenuFileName, new List<string>() { editMenuItemDataPlus.mekureBackMenuFileName });
-                    }
-                    else
-                    {
-                        parentInDiffFileNames[editMenuItemDataPlus.editMenuItemData.MenuFileName].Add(editMenuItemDataPlus.mekureBackMenuFileName);
-                    }
-                }
-                else
-                {
-                    if (!parentInDiffFileNames.ContainsKey(parentMenuFileName))
-                    {
-                        parentInDiffFileNames.Add(parentMenuFileName, new List<string>() { editMenuItemDataPlus.mekureBackMenuFileName });
-                    }
-                    else
-                    {
-                        parentInDiffFileNames[parentMenuFileName].Add(editMenuItemDataPlus.mekureBackMenuFileName);
-                    }
-                }
+                AddDiffFile(parentMenuFileName, editMenuItemDataPlus.mekureBackMenuFileName, parentInDiffFileNames);
             }
 
             if(isDiffParts && parentInDiffData != null)
@@ -381,6 +322,18 @@ namespace CAST.Loader
             if(!EditMenuItemData.ItemFileNameDic.ContainsKey(editMenuItemDataPlus.editMenuItemData.MenuFileName))
             {
                 EditMenuItemData.ItemFileNameDic.Add(editMenuItemDataPlus.editMenuItemData.MenuFileName, editMenuItemDataPlus.editMenuItemData);
+            }
+        }
+
+        public static void AddDiffFile(String parentMenuFileName, String diffMenuFileName, Dictionary<String, List<String>> parentInDiffFileNames)
+        {
+            if (!parentInDiffFileNames.ContainsKey(parentMenuFileName))
+            {
+                parentInDiffFileNames.Add(parentMenuFileName, new List<string>() { diffMenuFileName });
+            }
+            else
+            {
+                parentInDiffFileNames[parentMenuFileName].Add(diffMenuFileName);
             }
         }
     }
