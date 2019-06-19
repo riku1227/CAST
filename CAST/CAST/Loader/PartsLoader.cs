@@ -1,4 +1,5 @@
-﻿using SCENE_EDIT;
+﻿using CAST.data;
+using SCENE_EDIT;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,9 +24,9 @@ namespace CAST.Loader
                 var fileNmae = x.Key.Replace("_i_.menu", ".menu");
                 if(Path.GetExtension(fileNmae) == ".menu")
                 {
-                    if(fileNmae.IndexOf("_zurashi") == -1 && fileNmae.IndexOf("_mekure") == -1 && fileNmae.IndexOf("_porori") == -1)
+                    if(fileNmae.IndexOf("zurashi") == -1 && fileNmae.IndexOf("mekure") == -1 && fileNmae.IndexOf("porori") == -1)
                     {
-                        return !Regex.IsMatch(x.Key, "_z\\d+\\.menu$");
+                        return !Regex.IsMatch(fileNmae, "_z\\d+\\.menu$");
                     }
                 }
                 return false;
@@ -35,6 +36,8 @@ namespace CAST.Loader
             List<EditMenuItemData> editMenuDataList = new List<EditMenuItemData>();
             Dictionary<EditMenuItemData, string> childMenuDataDictionary = new Dictionary<EditMenuItemData, string>();
             Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames = new Dictionary<EditMenuItemData, List<string>>();
+            Dictionary<String, List<string>> parentInDiffFileNames = new Dictionary<String, List<string>>();
+            Dictionary<String, EditMenuItemData> parentInDiffData = new Dictionary<string, EditMenuItemData>();
 
             foreach (var item in baseMenuDic)
             {
@@ -49,8 +52,12 @@ namespace CAST.Loader
                         var menuData = ReadMenuFile(binaryReader, item.Key);
                         if(menuData != null)
                         {
-                            AddMenuItem(menuData, displayMenuFilesName, "", ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames);
-                            LoadChildMenu(item.Key.Replace("_i_.menu", ".menu").Replace(".menu", ""), item.Key, ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames);
+                            AddMenuItem(menuData, displayMenuFilesName, "", ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames, ref parentInDiffFileNames);
+                            LoadChildMenu(item.Key.Replace("_i_.menu", ".menu").Replace(".menu", ""), item.Key, ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames, ref parentInDiffFileNames);
+                            if(!String.IsNullOrEmpty(menuData.zurashiMenuFileName) || !String.IsNullOrEmpty(menuData.mekureMenuFileName) || !String.IsNullOrEmpty(menuData.mekureBackMenuFileName))
+                            {
+                                LoadDiffMenu(parentInDiffFileNames, parentInDiffData, ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames);
+                            }
                         }
                     }
                 }
@@ -61,7 +68,6 @@ namespace CAST.Loader
             {
                 if (childMenuDataDictionary.ContainsKey(editMenuItemData2))
                 {
-                    Debug.Log(editMenuItemData2.ItemName);
                     Util.invokePrivateSetter(typeof(EditMenuItemData), editMenuItemData2, "ParentMenu", EditMenuItemData.ItemFileNameDic[childMenuDataDictionary[editMenuItemData2]]);
                 }
                 if (parentInChildMenuFileNames.ContainsKey(editMenuItemData2))
@@ -80,6 +86,14 @@ namespace CAST.Loader
                     EditMenuItemData.ItemMenuDic.Add(editMenuItemData3.Mpn, new List<EditMenuItemData>());
                 }
                 EditMenuItemData.ItemMenuDic[editMenuItemData3.Mpn].Add(editMenuItemData3);
+            }
+
+            foreach (var item in parentInDiffFileNames)
+            {
+                foreach (var value in item.Value)
+                {
+                    EditMenuItemData.ItemFileNameDic[item.Key].ChildlenMenuList.Add(parentInDiffData[value]);
+                }
             }
         }
 
@@ -106,7 +120,8 @@ namespace CAST.Loader
         }
 
         public static void LoadChildMenu(String parentMenuBaseFileName, String parentMenuFileName,
-            ref List<EditMenuItemData> editMenuDataList, ref Dictionary<EditMenuItemData, string> childMenuDataDictionary, ref Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames)
+            ref List<EditMenuItemData> editMenuDataList, ref Dictionary<EditMenuItemData, string> childMenuDataDictionary, ref Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames, 
+            ref Dictionary<String, List<String>> parentInDiffFileNames)
         {
             var childList = MODManager.fileSystem.loadFilePathList.Where(x =>
             {
@@ -127,7 +142,7 @@ namespace CAST.Loader
                         var menuData = ReadMenuFile(binaryReader, item.Key);
                         if(menuData != null)
                         {
-                            AddMenuItem(menuData, "", parentMenuFileName, ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames);
+                            AddMenuItem(menuData, "", parentMenuFileName, ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames, ref parentInDiffFileNames);
                         }
                     }
                 }
@@ -135,11 +150,37 @@ namespace CAST.Loader
             }
         }
 
-        public static EditMenuItemData ReadMenuFile(BinaryReader binaryReader, String menuFileName)
+        public static void LoadDiffMenu(Dictionary<String, List<string>> parentInDiffFileNames,Dictionary<String, EditMenuItemData> parentInDiffData,
+            ref List<EditMenuItemData> editMenuDataList, ref Dictionary<EditMenuItemData, string> childMenuDataDictionary, ref Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames)
+        {
+            foreach (var diffFileNames in parentInDiffFileNames)
+            {
+                foreach(var fileName in diffFileNames.Value)
+                {
+                    if (MODManager.fileSystem.loadFilePathList.ContainsKey(fileName))
+                    {
+                        using (var stream = new FileStream(MODManager.fileSystem.loadFilePathList[fileName], FileMode.Open))
+                        {
+                            using (var binaryReader = new BinaryReader(stream))
+                            {
+                                var menuData = ReadMenuFile(binaryReader, fileName);
+                                if (menuData != null)
+                                {
+                                    AddMenuItem(menuData, "", fileName, ref editMenuDataList, ref childMenuDataDictionary, ref parentInChildMenuFileNames, ref parentInDiffFileNames, true, parentInDiffData);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public static EditMenuItemDataPlus ReadMenuFile(BinaryReader binaryReader, String menuFileName)
         {
             var menuSignature = binaryReader.ReadString();
             if(menuSignature == "CM3D2_MENU")
             {
+                var editMenuItemDataPlus = new EditMenuItemDataPlus();
                 var menuVersion = binaryReader.ReadInt32();
                 var txtPath = binaryReader.ReadString();
                 var partsName = binaryReader.ReadString();
@@ -180,6 +221,20 @@ namespace CAST.Loader
                                 mpnColorSet = stringList[1];
                                 colorSetFilesName = stringList[2];
                                 break;
+                            case "リソース参照":
+                                switch(stringList[1])
+                                {
+                                    case "パンツずらし":
+                                        editMenuItemDataPlus.zurashiMenuFileName = stringList[2];
+                                        break;
+                                    case "めくれスカート":
+                                        editMenuItemDataPlus.mekureMenuFileName = stringList[2];
+                                        break;
+                                    case "めくれスカート後ろ":
+                                        editMenuItemDataPlus.mekureBackMenuFileName = stringList[2];
+                                        break;
+                                }
+                                break;
                         }
                     }
                     else
@@ -201,7 +256,8 @@ namespace CAST.Loader
                 Util.invokePrivateSetter(editMenuItemDataType, editMenuItemData, "ParentMenu", null);
                 Util.invokePrivateSetter(editMenuItemDataType, editMenuItemData, "IsDelete", isDelete);
                 Util.invokePrivateSetter(editMenuItemDataType, editMenuItemData, "MultiColorID", (MaidParts.PARTS_COLOR)Enum.Parse(typeof(MaidParts.PARTS_COLOR), multiColorID));
-                return editMenuItemData;
+                editMenuItemDataPlus.editMenuItemData = editMenuItemData;
+                return editMenuItemDataPlus;
             }
             else
             {
@@ -210,12 +266,13 @@ namespace CAST.Loader
         }
 
         public static void AddMenuItem(
-            EditMenuItemData editMenuItemData, String displayMenuFiles, String parentMenuFileName,
-            ref List<EditMenuItemData> editMenuDataList, ref Dictionary<EditMenuItemData, string> childMenuDataDictionary, ref Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames)
+            EditMenuItemDataPlus editMenuItemDataPlus, String displayMenuFiles, String parentMenuFileName,
+            ref List<EditMenuItemData> editMenuDataList, ref Dictionary<EditMenuItemData, string> childMenuDataDictionary, ref Dictionary<EditMenuItemData, List<string>> parentInChildMenuFileNames, 
+            ref Dictionary<String, List<String>> parentInDiffFileNames, bool isDiffParts = false, Dictionary<String, EditMenuItemData> parentInDiffData = null)
         {
             if (!string.IsNullOrEmpty(parentMenuFileName))
             {
-                childMenuDataDictionary.Add(editMenuItemData, editMenuItemData.MenuFileName);
+                childMenuDataDictionary.Add(editMenuItemDataPlus.editMenuItemData, editMenuItemDataPlus.editMenuItemData.MenuFileName);
             }
             string[] array2 = displayMenuFiles.Split(new char[]
             {
@@ -231,11 +288,100 @@ namespace CAST.Loader
             }
             if (list2.Count > 0)
             {
-                parentInChildMenuFileNames.Add(editMenuItemData, list2);
+                parentInChildMenuFileNames.Add(editMenuItemDataPlus.editMenuItemData, list2);
             }
 
-            editMenuDataList.Add(editMenuItemData);
-            EditMenuItemData.ItemFileNameDic.Add(editMenuItemData.MenuFileName, editMenuItemData);
+            if(!String.IsNullOrEmpty(editMenuItemDataPlus.zurashiMenuFileName))
+            {
+                if(String.IsNullOrEmpty(parentMenuFileName))
+                {
+                    if(!parentInDiffFileNames.ContainsKey(editMenuItemDataPlus.editMenuItemData.MenuFileName))
+                    {
+                        parentInDiffFileNames.Add(editMenuItemDataPlus.editMenuItemData.MenuFileName, new List<string>() { editMenuItemDataPlus.zurashiMenuFileName });
+                    }
+                    else
+                    {
+                        parentInDiffFileNames[editMenuItemDataPlus.editMenuItemData.MenuFileName].Add(editMenuItemDataPlus.zurashiMenuFileName);
+                    }
+                }
+                else
+                {
+                    if(!parentInDiffFileNames.ContainsKey(parentMenuFileName))
+                    {
+                        parentInDiffFileNames.Add(parentMenuFileName, new List<string>() { editMenuItemDataPlus.zurashiMenuFileName });
+                    }
+                    else
+                    {
+                        parentInDiffFileNames[parentMenuFileName].Add(editMenuItemDataPlus.zurashiMenuFileName);
+                    }
+                }
+            }
+
+            if (!String.IsNullOrEmpty(editMenuItemDataPlus.mekureMenuFileName))
+            {
+                if (String.IsNullOrEmpty(parentMenuFileName))
+                {
+                    if (!parentInDiffFileNames.ContainsKey(editMenuItemDataPlus.editMenuItemData.MenuFileName))
+                    {
+                        parentInDiffFileNames.Add(editMenuItemDataPlus.editMenuItemData.MenuFileName, new List<string>() { editMenuItemDataPlus.mekureMenuFileName });
+                    }
+                    else
+                    {
+                        parentInDiffFileNames[editMenuItemDataPlus.editMenuItemData.MenuFileName].Add(editMenuItemDataPlus.mekureMenuFileName);
+                    }
+                }
+                else
+                {
+                    if (!parentInDiffFileNames.ContainsKey(parentMenuFileName))
+                    {
+                        parentInDiffFileNames.Add(parentMenuFileName, new List<string>() { editMenuItemDataPlus.mekureMenuFileName });
+                    }
+                    else
+                    {
+                        parentInDiffFileNames[parentMenuFileName].Add(editMenuItemDataPlus.mekureMenuFileName);
+                    }
+                }
+            }
+
+            if (!String.IsNullOrEmpty(editMenuItemDataPlus.mekureBackMenuFileName))
+            {
+                if (String.IsNullOrEmpty(parentMenuFileName))
+                {
+                    if (!parentInDiffFileNames.ContainsKey(editMenuItemDataPlus.editMenuItemData.MenuFileName))
+                    {
+                        parentInDiffFileNames.Add(editMenuItemDataPlus.editMenuItemData.MenuFileName, new List<string>() { editMenuItemDataPlus.mekureBackMenuFileName });
+                    }
+                    else
+                    {
+                        parentInDiffFileNames[editMenuItemDataPlus.editMenuItemData.MenuFileName].Add(editMenuItemDataPlus.mekureBackMenuFileName);
+                    }
+                }
+                else
+                {
+                    if (!parentInDiffFileNames.ContainsKey(parentMenuFileName))
+                    {
+                        parentInDiffFileNames.Add(parentMenuFileName, new List<string>() { editMenuItemDataPlus.mekureBackMenuFileName });
+                    }
+                    else
+                    {
+                        parentInDiffFileNames[parentMenuFileName].Add(editMenuItemDataPlus.mekureBackMenuFileName);
+                    }
+                }
+            }
+
+            if(isDiffParts && parentInDiffData != null)
+            {
+                if(!parentInDiffData.ContainsKey(editMenuItemDataPlus.editMenuItemData.MenuFileName))
+                {
+                    parentInDiffData.Add(editMenuItemDataPlus.editMenuItemData.MenuFileName, editMenuItemDataPlus.editMenuItemData);
+                }
+            }
+
+            editMenuDataList.Add(editMenuItemDataPlus.editMenuItemData);
+            if(!EditMenuItemData.ItemFileNameDic.ContainsKey(editMenuItemDataPlus.editMenuItemData.MenuFileName))
+            {
+                EditMenuItemData.ItemFileNameDic.Add(editMenuItemDataPlus.editMenuItemData.MenuFileName, editMenuItemDataPlus.editMenuItemData);
+            }
         }
     }
 }
