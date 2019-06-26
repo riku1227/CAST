@@ -12,5 +12,6 @@ namespace CAST.data
         public String zurashiMenuFileName;
         public String mekureMenuFileName;
         public String mekureBackMenuFileName;
+        public List<String> pororiMenuFilesName;
     }
 }
