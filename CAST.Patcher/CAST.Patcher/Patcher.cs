@@ -107,6 +107,20 @@ namespace CAST.Patcher
             ilProcessor.InsertAfter(ilProcessor.Body.Instructions.Last(), ilProcessor.Create(OpCodes.Ret));
         }
 
+        public void PatchEditCategoryPartsData_Load()
+        {
+            var EditCategoryPartsData = target.MainModule.GetType("SCENE_EDIT.EditCategoryPartsData");
+            var EditCategoryPartsData_Load = EditCategoryPartsData.Methods.First(x => x.Name == "Load");
+
+            var MODManager = inject.MainModule.GetType("CAST.MODManager");
+            var MODManager_InitCategoryParts = MODManager.Methods.First(x => x.IsStatic && x.Name == "InitCategoryParts");
+            var MODManager_InitCategoryParts_Ref = EditCategoryPartsData_Load.Module.ImportReference(MODManager_InitCategoryParts);
+
+            var ilProcessor = EditCategoryPartsData_Load.Body.GetILProcessor();
+            ilProcessor.Replace(ilProcessor.Body.Instructions.Last(), ilProcessor.Create(OpCodes.Call, MODManager_InitCategoryParts_Ref));
+            ilProcessor.InsertAfter(ilProcessor.Body.Instructions.Last(), ilProcessor.Create(OpCodes.Ret));
+        }
+
         public void ExportDLL(String baseDirectory, String outputDllName)
         {
             target.Write(Path.Combine(baseDirectory, outputDllName));

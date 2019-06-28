@@ -34,6 +34,7 @@ namespace CAST.Patcher
             patcher.PatchGameUty_Init();
             patcher.PatchEditPoseData_Load();
             patcher.PatchEditMenuItemData_Load();
+            patcher.PatchEditCategoryPartsData_Load();
 
             patcher.ExportDLL(baseDirectory, outputDllName);
         }

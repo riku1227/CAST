@@ -43,6 +43,11 @@ namespace CAST
             PartsLoader.LoadParts();
         }
 
+        public static void InitCategoryParts()
+        {
+            Debug.Log("InitCategoryParts");
+        }
+
         void Start()
         {
             SceneManager.sceneLoaded += onSceneLoaded;
