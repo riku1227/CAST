@@ -46,6 +46,7 @@ namespace CAST
         public static void InitCategoryParts()
         {
             Debug.Log("InitCategoryParts");
+            CategoryPartsLoadere.LoadCategory();
         }
 
         void Start()

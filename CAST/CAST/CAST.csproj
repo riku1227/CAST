@@ -256,6 +256,7 @@
     <Compile Include="AssetLoader.cs" />
     <Compile Include="data\EditMenuItemDataPlus.cs" />
     <Compile Include="FileSystem\FileSystemStorage.cs" />
+    <Compile Include="Loader\CategoryPartsLoadere.cs" />
     <Compile Include="Loader\PartsLoader.cs" />
     <Compile Include="Loader\PoseDataLoader.cs" />
     <Compile Include="MODManager.cs" />
