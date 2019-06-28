@@ -31,7 +31,7 @@ namespace CAST.FileSystem
             {
                 if(Path.GetExtension(path) != ".assets" && Path.GetExtension(path) != ".alist")
                 {
-                    loadFilePathList[Path.GetFileName(path)] = path;
+                    loadFilePathList[Path.GetFileName(path).ToLower()] = path;
                 }
             }
         }
