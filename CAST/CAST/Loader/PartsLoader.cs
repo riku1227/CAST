@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using UnityEngine;
 
 namespace CAST.Loader
 {
@@ -262,7 +261,6 @@ namespace CAST.Loader
                 var baseMenuFileName = menuFileName.Replace("_i_.menu", ".menu").Replace(".menu", "");
                 if (baseMenuFileName.IndexOf("zurashi") == -1 && baseMenuFileName.IndexOf("mekure") == -1 && baseMenuFileName.IndexOf("porori") == -1)
                 {
-                    Debug.Log("LoadPororiStart");
                     var pororiMenuDic = MODManager.fileSystem.loadFilePathList.Where(x => {
                         var fileNmae = x.Key.Replace("_i_.menu", ".menu").Replace("_i_", "");
                         if(Regex.IsMatch(fileNmae, baseMenuFileName + pororiRegex))
@@ -274,16 +272,13 @@ namespace CAST.Loader
                         }
                         return false;
                     });
-                    Debug.Log("LoadPorori: Dic End");
 
                     var pororiListKeyValue = pororiMenuDic.ToList();
-                    Debug.Log("LoadPorori: TolistEnd");
                     var pororiList = new List<String>();
                     foreach(var item in pororiListKeyValue)
                     {
                         pororiList.Add(item.Key);
                     }
-                    Debug.Log("LoadPorori: ForEach");
                     editMenuItemDataPlus.pororiMenuFilesName = pororiList;
                 }
 
@@ -347,7 +342,6 @@ namespace CAST.Loader
                 {
                     foreach (var item in editMenuItemDataPlus.pororiMenuFilesName)
                     {
-                        Debug.Log("AddPororiFile: " + item);
                         AddDiffFile(parentMenuFileName, item, parentInDiffFileNames);
                     }
                 }
