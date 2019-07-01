@@ -255,6 +255,10 @@ namespace CAST.Loader
                 var editMenuItemDataType = typeof(EditMenuItemData);
                 Util.invokePrivateSetter(editMenuItemDataType, editMenuItemData, "MenuRID", menuId);
                 Util.invokePrivateSetter(editMenuItemDataType, editMenuItemData, "MenuFileName", menuFileName);
+                if(!MODManager.fileSystem.loadFilePathList.ContainsKey(iconFileName))
+                {
+                    iconFileName = iconFileName.Replace("_I_", "_i_");
+                }
                 Util.invokePrivateSetter(editMenuItemDataType, editMenuItemData, "IconFileName", iconFileName);
                 Util.invokePrivateSetter(editMenuItemDataType, editMenuItemData, "ItemName", partsName);
                 Util.invokePrivateSetter(editMenuItemDataType, editMenuItemData, "Mpn", (MPN)Enum.Parse(typeof(MPN), partsCategory));
