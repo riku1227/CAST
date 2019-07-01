@@ -31,21 +31,21 @@ namespace CAST.FileSystem
             {
                 if(Path.GetExtension(path) != ".assets" && Path.GetExtension(path) != ".alist")
                 {
-                    loadFilePathList[Path.GetFileName(path).ToLower()] = path;
+                    loadFilePathList[Path.GetFileName(path)] = path;
                 }
             }
         }
 
         public override Texture GetTexture(string file_name)
         {
-            file_name = file_name.ToLower();
             file_name = Path.GetFileNameWithoutExtension(file_name) + ".png";
+            var lowerFileName = file_name.ToLower();
             FileSystemAB.AssetData assetData;
             var filePath = "";
             var alistDic = Util.getPrivateField(typeof(FileSystemAB), this, "m_fileDatas") as Dictionary<String, FileSystemAB.AssetData>;
-            if (alistDic.TryGetValue(file_name, out assetData))
+            if (alistDic.TryGetValue(lowerFileName, out assetData))
             {
-                return assetData.assetBundle.LoadAsset<Texture2D>(file_name);
+                return assetData.assetBundle.LoadAsset<Texture2D>(lowerFileName);
             }
             else if (loadFilePathList.TryGetValue(file_name, out filePath))
             {
@@ -56,13 +56,13 @@ namespace CAST.FileSystem
 
         public override AFileBase FileOpen(string file_name)
         {   
-            file_name = file_name.ToLower();
+            var lowerFileName = file_name.ToLower();
             FileSystemAB.AssetData assetData;
             var filePath = "";
             var alistDic = Util.getPrivateField(typeof(FileSystemAB), this, "m_fileDatas") as Dictionary<String, FileSystemAB.AssetData>;
-            if (alistDic.TryGetValue(file_name, out assetData))
+            if (alistDic.TryGetValue(lowerFileName, out assetData))
             {
-                return new FileAB(file_name, assetData.fileSize, assetData.assetBundle);
+                return new FileAB(lowerFileName, assetData.fileSize, assetData.assetBundle);
             }
             else if (loadFilePathList.TryGetValue(file_name, out filePath))
             {
@@ -73,14 +73,14 @@ namespace CAST.FileSystem
 
         public override bool IsExistentFile(string file_name)
         {
-            file_name = file_name.ToLower();
+            var lowerFileName = file_name.ToLower();
             bool result = false;
             FileSystemAB.AssetData assetData;
             var filePath = "";
             var alistDic = Util.getPrivateField(typeof(FileSystemAB), this, "m_fileDatas") as Dictionary<String, FileSystemAB.AssetData>;
-            if (alistDic.TryGetValue(file_name, out assetData))
+            if (alistDic.TryGetValue(lowerFileName, out assetData))
             {
-                result = assetData.assetBundle.Contains(file_name);
+                result = assetData.assetBundle.Contains(lowerFileName);
             }
             else if (loadFilePathList.TryGetValue(file_name, out filePath))
             {

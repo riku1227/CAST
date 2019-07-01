@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace CAST.Loader
 {
     public class PartsLoader
     {
-        public static String childRegex = "_z\\d+\\.menu$";
+        public static String childRegex = "_z\\d+";
         public static String pororiRegex = "_porori(\\d+|)";
         public static void LoadParts()
         {
@@ -101,10 +102,17 @@ namespace CAST.Loader
         {
             var childList = MODManager.fileSystem.loadFilePathList.Where(x => 
             {
-                var fileName = x.Key.Replace("_i_.menu", ".menu");
-                if(Regex.IsMatch(fileName, baseMenuName + childRegex))
+                var fileName = x.Key.Replace("_i_.menu", ".menu").Replace(".menu", "");
+                if(Path.GetExtension(x.Key) == ".menu" && Regex.IsMatch(fileName, childRegex))
                 {
-                    return true;
+                    if (fileName.IndexOf("zurashi") == -1 && fileName.IndexOf("mekure") == -1 && fileName.IndexOf("porori") == -1)
+                    {
+                        var temp = Regex.Replace(fileName, childRegex, "");
+                        if (baseMenuName == temp)
+                        {
+                            return true;
+                        }
+                    }
                 }
                 return false;
             });
