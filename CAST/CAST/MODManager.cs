@@ -56,6 +56,7 @@ namespace CAST
 
         void onSceneLoaded(Scene nextScene, LoadSceneMode mode)
         {
+            Debug.Log(nextScene.name);
             if(nextScene.name.IndexOf("Main") != -1)
             {
                 //カメラのy軸制限を解除

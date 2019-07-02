@@ -121,6 +121,42 @@ namespace CAST.Patcher
             ilProcessor.InsertAfter(ilProcessor.Body.Instructions.Last(), ilProcessor.Create(OpCodes.Ret));
         }
 
+        public void PatchSceneEditBodyFigureWindow_Open()
+        {
+            var SceneEdit = target.MainModule.GetType("SCENE_EDIT.SceneEditBodyFigureWindow");
+            var SceneEdit_SetUp = SceneEdit.Methods.First(x => x.Name == "Open");
+
+            var ilProcessor = SceneEdit_SetUp.Body.GetILProcessor();
+
+            ilProcessor.Replace(ilProcessor.Body.Instructions[158], ilProcessor.Create(OpCodes.Ldc_I4_0));
+            ilProcessor.Remove(ilProcessor.Body.Instructions[159]);
+
+            ilProcessor.Replace(ilProcessor.Body.Instructions[163], ilProcessor.Create(OpCodes.Ldc_I4_S, (sbyte)100));
+            ilProcessor.Remove(ilProcessor.Body.Instructions[164]);
+        }
+
+        public void PatchMaid_SetProp()
+        {
+            var Maid = target.MainModule.GetType("Maid");
+            var Maid_SetProp = Maid.Methods.First(x => {
+                if(x.FullName == "System.Void Maid::SetProp(MPN,System.Int32,System.Boolean)")
+                {
+                    return true;
+                }
+                return false;
+            });
+
+            var ilProcessor = Maid_SetProp.Body.GetILProcessor();
+
+            ilProcessor.Remove(ilProcessor.Body.Instructions[19]);
+            ilProcessor.Remove(ilProcessor.Body.Instructions[19]);
+            ilProcessor.Remove(ilProcessor.Body.Instructions[19]);
+
+            ilProcessor.Remove(ilProcessor.Body.Instructions[23]);
+            ilProcessor.Remove(ilProcessor.Body.Instructions[23]);
+            ilProcessor.Remove(ilProcessor.Body.Instructions[23]);
+        }
+
         public void ExportDLL(String baseDirectory, String outputDllName)
         {
             target.Write(Path.Combine(baseDirectory, outputDllName));

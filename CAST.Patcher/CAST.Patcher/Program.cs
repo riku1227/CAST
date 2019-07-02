@@ -9,7 +9,7 @@ namespace CAST.Patcher
         static void Main(string[] args)
         {
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            var targetDllName = "Assembly-CSharp.dll";
+            var targetDllName = "Assembly-CSharp_orig.dll";
 
             var injectDllName = "CAST.dll";
 
@@ -35,6 +35,8 @@ namespace CAST.Patcher
             patcher.PatchEditPoseData_Load();
             patcher.PatchEditMenuItemData_Load();
             patcher.PatchEditCategoryPartsData_Load();
+            patcher.PatchSceneEditBodyFigureWindow_Open();
+            patcher.PatchMaid_SetProp();
 
             patcher.ExportDLL(baseDirectory, outputDllName);
         }
