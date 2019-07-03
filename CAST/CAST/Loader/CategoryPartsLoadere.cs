@@ -20,6 +20,7 @@ namespace CAST.Loader
             AddEditCategoryPartsData(SceneEditCategoryWindow.CategoryType.DRESS_PARTS, "accanl", "customview_icon_onepiece.tex", MPN.accanl, ref categoryList, ref enabledList);
             AddEditCategoryPartsData(SceneEditCategoryWindow.CategoryType.DRESS_PARTS, "accvag", "customview_icon_onepiece.tex", MPN.accvag, ref categoryList, ref enabledList);
             AddEditCategoryPartsData(SceneEditCategoryWindow.CategoryType.DRESS_PARTS, "accxxx", "customview_icon_onepiece.tex", MPN.accxxx, ref categoryList, ref enabledList);
+            AddEditCategoryPartsData(SceneEditCategoryWindow.CategoryType.BODY_PARTS, "body", "customview_icon_onepiece.tex", MPN.body, ref categoryList, ref enabledList);
 
             var editCategoryPartsDataType = typeof(EditCategoryPartsData);
             Util.setPrivateStaticField(editCategoryPartsDataType, "m_dataList", categoryList);
