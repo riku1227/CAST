@@ -68,6 +68,10 @@ namespace CAST.FileSystem
             {
                 return new FileStorage(filePath);
             }
+            else if(loadFilePathList.TryGetValue(lowerFileName, out filePath))
+            {
+                return new FileStorage(filePath);
+            }
             return null;
         }
 

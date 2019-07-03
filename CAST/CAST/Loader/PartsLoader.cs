@@ -259,6 +259,12 @@ namespace CAST.Loader
                 {
                     iconFileName = iconFileName.Replace("_I_", "_i_");
                 }
+
+                if (!MODManager.fileSystem.loadFilePathList.ContainsKey(iconFileName))
+                {
+                    iconFileName = iconFileName.ToLower();
+                }
+
                 Util.invokePrivateSetter(editMenuItemDataType, editMenuItemData, "IconFileName", iconFileName);
                 Util.invokePrivateSetter(editMenuItemDataType, editMenuItemData, "ItemName", partsName);
                 Util.invokePrivateSetter(editMenuItemDataType, editMenuItemData, "Mpn", (MPN)Enum.Parse(typeof(MPN), partsCategory));
